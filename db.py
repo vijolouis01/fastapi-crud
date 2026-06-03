@@ -1,11 +1,13 @@
-import psycopg
-from psycopg_pool import ConnectionPool
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL="postgresql://postgres:root@localhost:5432/postgres"
+DATABASE_URL = "postgresql+psycopg://vijo:vijolouis@localhost:5432/todo"
 
-pool=ConnectionPool(conninfo=DATABASE_URL)
+engine = create_engine(DATABASE_URL, echo=True)
+
+SessionLocal = sessionmaker(engine,autocommit=False, autoflush=False)
 
 
-def get_conn():
-    with pool.connection() as conn:
-        yield conn
+def get_db():
+    with SessionLocal() as db:
+        yield db

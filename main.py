@@ -1,12 +1,8 @@
 from fastapi import FastAPI
-from routers import user
+from routers.user import router
+from models.user import Base
+from db import engine
 
-app=FastAPI()
-
-
-app.include_router(user.router)
-
-
-      
-            
-
+app = FastAPI()
+Base.metadata.create_all(engine)
+app.include_router(router)

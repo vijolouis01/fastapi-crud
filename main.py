@@ -15,8 +15,10 @@ app = FastAPI(
     version=settings.app_version,
 )
 
+
 # Create database tables
 Base.metadata.create_all(engine)
+
 
 # Include routers
 app.include_router(router)

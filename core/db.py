@@ -8,12 +8,11 @@ from sqlalchemy.orm import Session, sessionmaker
 from core import get_settings
 
 settings = get_settings()
-# Database URL from environment or default
-DATABASE_URL = settings.database_url
+
 
 # Create engine with connection pooling
 engine = create_engine(
-    DATABASE_URL,
+    settings.database_url,
     echo=settings.debug,
     pool_pre_ping=True,  # Validate connection before using
     pool_recycle=3600,  # Recycle connections every hour

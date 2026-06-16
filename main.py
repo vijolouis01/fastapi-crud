@@ -2,15 +2,17 @@
 
 from fastapi import FastAPI
 
-from db import engine
+from core import engine, get_settings
 from models import Base
 from routers import router
 
+settings = get_settings()
+
 # Create FastAPI application instance
 app = FastAPI(
-    title="FastAPI CRUD API",
-    description="A simple CRUD application for managing users",
-    version="0.1.0",
+    title=settings.app_name,
+    description=settings.app_description,
+    version=settings.app_version,
 )
 
 # Create database tables

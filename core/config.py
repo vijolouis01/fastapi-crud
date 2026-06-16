@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     # App settings
     app_name: str = "FastAPI CRUD"
     app_version: str = "0.1.0"
+    app_description: str = "A simple CRUD application for managing users"
     debug: bool = os.getenv("DEBUG", "False").lower() == "true"
 
     # Database settings

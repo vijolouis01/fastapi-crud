@@ -1,9 +1,11 @@
-from fastapi import APIRouter, HTTPException, Depends, status
-from schemas.user import UserCreate
-from db import get_db
-from sqlalchemy.orm import Session
 from typing import Annotated
-from models.user import User
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+from core import get_db
+from models import User
+from schemas import UserCreate
 
 DBSession = Annotated[Session, Depends(get_db)]
 router = APIRouter(tags=["Users"], prefix="/users")

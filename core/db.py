@@ -1,18 +1,20 @@
 """Database configuration and session management."""
 
-import os
 from typing import Generator
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from core import get_settings
+
+settings = get_settings()
 # Database URL from environment or default
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg://vijo:vijolouis@localhost:5432/todo")
+DATABASE_URL = settings.database_url
 
 # Create engine with connection pooling
 engine = create_engine(
     DATABASE_URL,
-    echo=os.getenv("DEBUG", "False").lower() == "true",
+    echo=settings.debug,
     pool_pre_ping=True,  # Validate connection before using
     pool_recycle=3600,  # Recycle connections every hour
 )

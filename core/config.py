@@ -16,8 +16,10 @@ class Settings(BaseSettings):
     debug: bool = os.getenv("DEBUG", "False").lower() == "true"
 
     # Database settings
+    # Use async PostgreSQL connection string (postgresql+asyncpg://)
     database_url: str = os.getenv(
-        "DATABASE_URL", "postgresql+psycopg://vijo:vijolouis@localhost:5432/todo"
+        "DATABASE_URL",
+        "postgresql+asyncpg://vijo:vijolouis@localhost:5432/todo",
     )
 
     # Server settings

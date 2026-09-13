@@ -22,7 +22,7 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column(index=True)  # Added index for faster queries
     email: Mapped[str] = mapped_column(index=True, unique=True)
 
     def __repr__(self) -> str:

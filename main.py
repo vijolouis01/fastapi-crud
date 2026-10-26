@@ -4,7 +4,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from core import engine, get_settings
+from core.config import get_settings
+from core.db import engine
 from models import Base
 from routers import router
 
@@ -13,20 +14,13 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
-    Lifespan context manager for FastAPI.
-
-    Creates database tables on startup and closes engine on shutdown.
-    """
-    # Startup: Create database tables
+    """Create database tables on startup and close engine on shutdown."""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
-    # Shutdown: Close engine
     await engine.dispose()
 
 
-# Create FastAPI application instance
 app = FastAPI(
     title=settings.app_name,
     description=settings.app_description,
@@ -34,8 +28,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-
-# Include routers
 app.include_router(router)
 
 
@@ -46,10 +38,5 @@ app.include_router(router)
     description="Check if the API is running",
 )
 async def root() -> dict:
-    """
-    Root endpoint for API health check.
-
-    Returns:
-        JSON message indicating API is running
-    """
+    """Health check endpoint."""
     return {"message": "FastAPI CRUD API is running"}

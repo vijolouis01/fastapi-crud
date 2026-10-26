@@ -9,12 +9,18 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
-    model_config = SettingsConfigDict(env_file=".env", case_sensitive=False, extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=False,
+        extra="ignore",
+    )
 
     # App settings
     app_name: str = Field(default="FastAPI CRUD")
     app_version: str = Field(default="0.1.0")
-    app_description: str = Field(default="A simple CRUD application for managing users")
+    app_description: str = Field(
+        default="A simple CRUD application for managing users"
+    )
     debug: bool = Field(default=False)
 
     # Database settings
@@ -27,12 +33,7 @@ class Settings(BaseSettings):
     port: int = Field(default=8000)
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
-    """
-    Get application settings (cached).
-
-    Returns:
-        Settings instance
-    """
+    """Get application settings (cached)."""
     return Settings()

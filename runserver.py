@@ -1,114 +1,41 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+import os
+import subprocess
+import sys
 
-[project]
-name = "fastapi-crud"
-version = "0.1.0"
-description = "A simple CRUD application built with FastAPI and SQLAlchemy"
-readme = "README.md"
-requires-python = ">=3.10"
-license = {text = "MIT"}
-authors = [
-    {name = "Vijo Louis", email = "vijolouis@example.com"}
-]
-keywords = ["fastapi", "crud", "sqlalchemy", "postgresql"]
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Environment :: Web Environment",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Topic :: Internet :: WWW/HTTP",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-]
-dependencies = [
-    "fastapi[standard]>=0.115.0",
-    "psycopg[binary,pool]>=3.2.0",
-    "sqlalchemy[asyncio]>=2.0.0",
-    "python-dotenv>=1.0.0",
-    "pydantic-settings>=2.0.0",
-    "asyncpg>=0.29.0",
-]
 
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.4.0",
-    "pytest-asyncio>=0.21.0",
-    "black>=23.7.0",
-    "ruff>=0.1.0",
-    "mypy>=1.5.0",
-    "isort>=5.12.0",
-]
+def _base_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env.setdefault("HOST", "0.0.0.0")
+    env.setdefault("PORT", "8000")
+    return env
 
-[project.scripts]
-dev = "runserver:dev"
-pro = "runserver:pro"
 
-[project.urls]
-Homepage = "https://github.com/vijolouis01/fastapi-crud"
-Documentation = "https://github.com/vijolouis01/fastapi-crud"
-Repository = "https://github.com/vijolouis01/fastapi-crud.git"
-"Bug Tracker" = "https://github.com/vijolouis01/fastapi-crud/issues"
+def dev() -> None:
+    env = _base_env()
+    subprocess.run(
+        [sys.executable, "-m", "fastapi", "dev", "main.py"],
+        env=env,
+        check=False,
+    )
 
-[tool.black]
-line-length = 100
-target-version = ['py310']
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | build
-  | dist
-)/
-'''
 
-# Ruff v0.1.0+: lint rules live under [tool.ruff.lint]
-[tool.ruff]
-line-length = 100
-target-version = "py310"
+def pro() -> None:
+    env = _base_env()
+    subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "uvicorn",
+            "main:app",
+            "--host",
+            env["HOST"],
+            "--port",
+            env["PORT"],
+        ],
+        env=env,
+        check=False,
+    )
 
-[tool.ruff.lint]
-select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "C",  # flake8-comprehensions
-    "B",  # flake8-bugbear
-]
-ignore = ["E501"]
 
-[tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"]
-
-[tool.isort]
-profile = "black"
-line_length = 100
-multi_line_output = 3          # was: multi_line_mode (wrong key)
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
-skip_gitignore = true
-
-[tool.mypy]
-python_version = "3.10"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = false
-ignore_missing_imports = true
-
-[tool.hatch.build.targets.wheel]
-packages = ["core", "models", "routers", "schemas"]
+if __name__ == "__main__":
+    dev()

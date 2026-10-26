@@ -33,6 +33,7 @@ dependencies = [
     "sqlalchemy[asyncio]>=2.0.0",
     "python-dotenv>=1.0.0",
     "pydantic-settings>=2.0.0",
+    "asyncpg>=0.29.0",
 ]
 
 [project.optional-dependencies]
@@ -44,6 +45,10 @@ dev = [
     "mypy>=1.5.0",
     "isort>=5.12.0",
 ]
+
+[project.scripts]
+dev = "runserver:dev"
+pro = "runserver:pro"
 
 [project.urls]
 Homepage = "https://github.com/vijolouis01/fastapi-crud"
@@ -69,19 +74,18 @@ extend-exclude = '''
 )/
 '''
 
-# Ruff v0.1.0+: lint rules live under [tool.ruff.lint]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
 
 [tool.ruff.lint]
 select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "C",  # flake8-comprehensions
-    "B",  # flake8-bugbear
+    "E",
+    "W",
+    "F",
+    "I",
+    "C",
+    "B",
 ]
 ignore = ["E501"]
 
@@ -91,7 +95,7 @@ ignore = ["E501"]
 [tool.isort]
 profile = "black"
 line_length = 100
-multi_line_output = 3          # was: multi_line_mode (wrong key)
+multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true

@@ -1,36 +1,30 @@
 """Application configuration settings."""
 
-import os
 from functools import lru_cache
 
-from pydantic_settings import BaseSettings
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
+    model_config = SettingsConfigDict(env_file=".env", case_sensitive=False, extra="ignore")
+
     # App settings
-    app_name: str = "FastAPI CRUD"
-    app_version: str = "0.1.0"
-    app_description: str = "A simple CRUD application for managing users"
-    debug: bool = os.getenv("DEBUG", "False").lower() == "true"
+    app_name: str = Field(default="FastAPI CRUD")
+    app_version: str = Field(default="0.1.0")
+    app_description: str = Field(default="A simple CRUD application for managing users")
+    debug: bool = Field(default=False)
 
     # Database settings
-    # Use async PostgreSQL connection string (postgresql+asyncpg://)
-    database_url: str = os.getenv(
-        "DATABASE_URL",
-        "postgresql+asyncpg://vijo:vijolouis@localhost:5432/todo",
+    database_url: str = Field(
+        default="postgresql+asyncpg://user:password@localhost:5432/fastapi_crud"
     )
 
     # Server settings
-    host: str = os.getenv("HOST", "0.0.0.0")
-    port: int = int(os.getenv("PORT", "8000"))
-
-    class Config:
-        """Pydantic config."""
-
-        env_file = ".env"
-        case_sensitive = False
+    host: str = Field(default="0.0.0.0")
+    port: int = Field(default=8000)
 
 
 @lru_cache()
